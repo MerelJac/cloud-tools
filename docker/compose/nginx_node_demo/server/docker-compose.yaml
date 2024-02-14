@@ -1,0 +1,14 @@
+services:
+  server:
+    image: node:21-alpine
+    volumes:
+     - ./public:/site/public
+     - ./entrypoint.sh:/entrypoint.sh
+    command:
+      "/entrypoint.sh"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

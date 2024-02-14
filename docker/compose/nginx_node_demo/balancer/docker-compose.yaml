@@ -1,0 +1,13 @@
+services:
+  web:
+    image: nginx:stable-alpine3.17
+    volumes:
+     - ./nginx:/etc/nginx
+    ports:
+     - "80:80"
+    networks:
+      - server_backend
+
+networks:
+  server_backend:
+    external: true
