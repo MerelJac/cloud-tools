@@ -5,11 +5,13 @@
   become: true
 
   tasks:
+    - name: Make the working directory before copying the file
+      ansible.builtin.shell: mkdir -p /usr/docker/project
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
         src: docker-compose.yml
         dest: /usr/docker/project/docker-compose.yml
-    - name: Change the working directory to somedir/ before executing the command
+    - name: Change the working directory before executing the command
       ansible.builtin.shell: docker compose up -d
       args:
         chdir: /usr/docker/project

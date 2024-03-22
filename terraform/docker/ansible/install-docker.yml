@@ -5,6 +5,12 @@
   become: true
 
   tasks:
+    - name: Wait for apt
+      become: yes
+      shell: |
+        while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+        while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 5; done;
+        
     - name: Update and upgrade all packages to the latest version
       ansible.builtin.apt:
         update_cache: true
@@ -38,6 +44,12 @@
           deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable
         filename: docker
         state: present
+
+    - name: Wait for apt
+      become: yes
+      shell: |
+        while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+        while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 5; done;
 
     - name: Install Docker and related packages
       ansible.builtin.apt:
