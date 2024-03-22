@@ -1,0 +1,15 @@
+---
+- name: Install Compose Project on Ubuntu
+  hosts: all
+  remote_user: root 
+  become: true
+
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: docker-compose.yml
+        dest: /usr/docker/project/docker-compose.yml
+    - name: Change the working directory to somedir/ before executing the command
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: /usr/docker/project
