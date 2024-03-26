@@ -5,12 +5,6 @@
   become: true
 
   tasks:
-    - name: Wait for apt
-      become: yes
-      shell: |
-        while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
-        while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 5; done;
-        
     - name: Update and upgrade all packages to the latest version
       ansible.builtin.apt:
         update_cache: true
