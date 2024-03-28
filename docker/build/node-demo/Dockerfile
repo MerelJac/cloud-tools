@@ -1,6 +1,7 @@
 FROM node:20-alpine
 
 COPY src /usr/app
+COPY package*.json /usr/app
 
 RUN cd /usr/app && npm install 
 
