@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"docker_server","Source":"./config","Dir":"config"},{"Key":"docker_server.webserver_cluster","Source":"../infra","Dir":"infra"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"docker_server","Source":"./config","Dir":"config"}]}
