@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"docker_server","Source":"./config","Dir":"config"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"docker_server","Source":"./config","Dir":"config"},{"Key":"droplet","Source":"./modules/droplet","Dir":"modules/droplet"}]}
