@@ -21,7 +21,7 @@ services:
     depends_on:
       - dind
     ports:
-      - 8080:8080
+      - 8080:8888
       - 50000:50000
     volumes:
       - ./jenkins:/var/jenkins_home
@@ -33,7 +33,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jenkins.rule=Host(`mjs-jenkins.dops.stairways.ai`)"
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.mjs.dops.stairways.ai`)"
       - "traefik.http.routers.jenkins.entrypoints=web"
       # - "traefik.http.routers.shop-web.middlewares=redirect-to-https"
       # - "traefik.http.routers.shop-websecure.rule=Host(`rallycryunlimited.com`)"
