@@ -1,17 +1,27 @@
 ---
-- name: Install Compose Project on Ubuntu
+- name: Install Compose Projects on Server
   hosts: all
   remote_user: root 
   become: true
 
   tasks:
-    - name: Make the working directory before copying the file
-      ansible.builtin.shell: mkdir -p /usr/docker/project
+    - name: Make a working directory for traefik
+      ansible.builtin.shell: mkdir -p /usr/docker/traefik
+    - name: Make a working directory for jenkins
+      ansible.builtin.shell: mkdir -p /usr/docker/jenkins
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
-        src: docker-compose.yml
-        dest: /usr/docker/project/docker-compose.yml
-    - name: Change the working directory before executing the command
+        src: traefik/
+        dest: /usr/docker/traefik/
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: jenkins/
+        dest: /usr/docker/jenkins/
+    - name: Start traefik container
       ansible.builtin.shell: docker compose up -d
       args:
-        chdir: /usr/docker/project
+        chdir: /usr/docker/traefik
+    - name: Start jenkins container
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: /usr/docker/jenkins

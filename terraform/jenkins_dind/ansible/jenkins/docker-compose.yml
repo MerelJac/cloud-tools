@@ -1,0 +1,49 @@
+version: '3.7'
+services:
+  dind:
+    image: docker:dind
+    user: root
+    privileged: true
+    container_name: dind
+    expose:
+      - 2375
+    volumes:
+      - ./jenkins/workspace:/var/jenkins_home/workspace
+    networks:
+      - jenkins_dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    user: root
+    container_name: jenkins
+    depends_on:
+      - dind
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - ./jenkins:/var/jenkins_home
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      DOCKER_HOST: "tcp://dind:2375"
+    networks:
+      - jenkins_dind
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jenkins.rule=Host(`mjs-jenkins.dops.stairways.ai`)"
+      - "traefik.http.routers.jenkins.entrypoints=web"
+      # - "traefik.http.routers.shop-web.middlewares=redirect-to-https"
+      # - "traefik.http.routers.shop-websecure.rule=Host(`rallycryunlimited.com`)"
+      # - "traefik.http.routers.shop-websecure.entrypoints=websecure"
+      # - "traefik.http.routers.shop-websecure.tls=true"
+      # - "traefik.http.routers.shop-websecure.tls.certresolver=acmeprd"
+      # - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+networks:
+  jenkins_dind:
+    driver: bridge
+  traefik:
+    name: traefik_backend
