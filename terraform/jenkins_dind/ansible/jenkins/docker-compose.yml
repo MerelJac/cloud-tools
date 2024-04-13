@@ -20,9 +20,9 @@ services:
     container_name: jenkins
     depends_on:
       - dind
-    ports:
-      - 8080:8888
-      - 50000:50000
+    # ports:
+      # - 8080:8888
+      # - 50000:50000
     volumes:
       - ./jenkins:/var/jenkins_home
       - /usr/bin/docker:/usr/bin/docker
@@ -35,6 +35,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jenkins.rule=Host(`jenkins.mjs.dops.stairways.ai`)"
       - "traefik.http.routers.jenkins.entrypoints=web"
+      - "traefik.http.services.jenkins-unsecured.loadbalancer.server.port=8080"
       # - "traefik.http.routers.shop-web.middlewares=redirect-to-https"
       # - "traefik.http.routers.shop-websecure.rule=Host(`rallycryunlimited.com`)"
       # - "traefik.http.routers.shop-websecure.entrypoints=websecure"

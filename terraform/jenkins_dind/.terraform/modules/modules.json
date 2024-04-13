@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"droplet","Source":"./infra/config","Dir":"infra/config"},{"Key":"droplet.do","Source":"../do","Dir":"infra/do"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"droplet","Source":"./infra/config/server","Dir":"infra/config/server"},{"Key":"droplet.init","Source":"../init","Dir":"infra/config/init"},{"Key":"droplet.init.do","Source":"../../do","Dir":"infra/do"}]}

@@ -1,5 +1,5 @@
 module "droplet" {
-  source       = "./infra/config"
+  source       = "./infra/config/server"
   do_token     = var.do_token
   pvt_key      = var.pvt_key
   pub_key      = var.pub_key
