@@ -20,9 +20,8 @@ services:
     container_name: jenkins
     depends_on:
       - dind
-    # ports:
-      # - 8080:8888
-      # - 50000:50000
+    expose:
+      - 8080
     volumes:
       - ./jenkins:/var/jenkins_home
       - /usr/bin/docker:/usr/bin/docker

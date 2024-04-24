@@ -5,7 +5,7 @@ module "do" {
   pub_key      = var.pub_key
 }
 
-resource "null_resource" "initialized_droplet" {
+resource "null_resource" "initial_droplet_config" {
   provisioner "local-exec" {
     command = join(" ", [
                 "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook",
@@ -18,4 +18,8 @@ resource "null_resource" "initialized_droplet" {
 
 output "initialized_droplet" {
   value = module.do.raw_droplet
+}
+
+output "initial_config_done" {
+  value = null_resource.initial_droplet_config
 }

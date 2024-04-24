@@ -12,6 +12,10 @@ resource "null_resource" "jenkins_droplet" {
     reconfigure = "${random_uuid.force_config.result}"
   }
 
+  depends_on = [
+    module.init.initial_config_done
+  ]
+
   provisioner "local-exec" {
     command = join(" ", [
       "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook",
