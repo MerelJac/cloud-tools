@@ -1,5 +1,5 @@
-module "do" {
-  source       = "../do"
+module "server" {
+  source       = "../config/server"
   do_token     = var.do_token
   pvt_key      = var.pvt_key
   pub_key      = var.pub_key
@@ -8,8 +8,8 @@ module "do" {
 resource "digitalocean_record" "web" {
   domain = "dops.stairways.ai"
   type   = "A"
-  name   = "web"
-  value  = "${module.do.raw_droplet.ipv4_address}"
+  name   = "jenkins.mjs"
+  value  = "${module.server.server.ipv4_address}"
 }
 
 output "web_alias" {
