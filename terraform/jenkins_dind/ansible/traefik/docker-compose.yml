@@ -17,8 +17,7 @@ services:
      - "traefik.http.routers.traefik-websecure.service=api@internal"
      - "traefik.http.routers.traefik-websecure.tls.certresolver=acmestg"
      - "traefik.http.routers.traefik-websecure.tls=true"
-     - "traefik.http.routers.traefik-web.middlewares=https-redirect"
-     - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+
     networks:
       - traefik
     ports:

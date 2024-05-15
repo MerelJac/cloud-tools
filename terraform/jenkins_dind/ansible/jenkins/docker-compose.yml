@@ -40,8 +40,6 @@ services:
       - "traefik.http.routers.jenkins-websecure.entrypoints=websecure"
       - "traefik.http.routers.jenkins-websecure.tls=true"
       - "traefik.http.routers.jenkins-websecure.tls.certresolver=acmestg"
-      - "traefik.http.routers.jenkins-web.middlewares=https-redirect"
-      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
 
 networks:
   jenkins_dind:
