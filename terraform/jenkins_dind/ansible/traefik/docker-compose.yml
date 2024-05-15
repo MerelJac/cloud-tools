@@ -6,15 +6,26 @@ services:
     container_name: "traefik-router"
     labels:
      - "traefik.enable=true"
-     - "traefik.http.routers.traefik=true"
      - "traefik.docker.network=traefik_backend"
+     - "traefik.http.routers.traefik-web=true"
+     - "traefik.http.routers.traefik-web.rule=Host(`traefik.mjs.dops.stairways.ai`)"
+     - "traefik.http.routers.traefik-web.entrypoints=web"
+     - "traefik.http.routers.traefik-web.service=api@internal"
+     - "traefik.http.routers.traefik-websecure=true"
+     - "traefik.http.routers.traefik-websecure.rule=Host(`traefik.mjs.dops.stairways.ai`)"
+     - "traefik.http.routers.traefik-websecure.entrypoints=websecure"
+     - "traefik.http.routers.traefik-websecure.service=api@internal"
+     - "traefik.http.routers.traefik-websecure.tls.certresolver=acmestg"
+     - "traefik.http.routers.traefik-websecure.tls=true"
+     - "traefik.http.routers.traefik-web.middlewares=https-redirect"
+     - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
     networks:
       - traefik
     ports:
       # HTTPS / SSL port
       - "80:80"
       - "443:443"
-      # The Traefik Web UI port (enabled by api:insecure: true in traefik.yml)
+    expose:
       - "8080:8080"
     volumes:
      - ./traefik-config.yml:/etc/traefik/traefik.yml:ro

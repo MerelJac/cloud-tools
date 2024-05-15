@@ -3,7 +3,6 @@ global:
 
 api:
   dashboard: true
-  insecure: true
 
 providers:
   docker:
@@ -20,13 +19,13 @@ certificatesresolvers:
     acme:
       tlschallenge: true
       email: "swissarmybud@gmail.com"
-      storage: "/letsencrypt/acme.json"
+      storage: "/letsencrypt/acme-stg.json"
       caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
   acmeprd:
     acme:
       tlschallenge: true
       email: "swissarmybud@gmail.com"
-      storage: "/letsencrypt/acme.json"
+      storage: "/letsencrypt/acme-prd.json"
       caserver: "https://acme-v02.api.letsencrypt.org/directory"
 
 log:

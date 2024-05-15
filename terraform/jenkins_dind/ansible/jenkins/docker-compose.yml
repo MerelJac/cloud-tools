@@ -32,15 +32,16 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik_backend"
       - "traefik.http.routers.jenkins.rule=Host(`jenkins.mjs.dops.stairways.ai`)"
       - "traefik.http.routers.jenkins.entrypoints=web"
       - "traefik.http.services.jenkins-unsecured.loadbalancer.server.port=8080"
-      # - "traefik.http.routers.shop-web.middlewares=redirect-to-https"
-      # - "traefik.http.routers.shop-websecure.rule=Host(`rallycryunlimited.com`)"
-      # - "traefik.http.routers.shop-websecure.entrypoints=websecure"
-      # - "traefik.http.routers.shop-websecure.tls=true"
-      # - "traefik.http.routers.shop-websecure.tls.certresolver=acmeprd"
-      # - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.jenkins-websecure.rule=Host(`jenkins.mjs.dops.stairways.ai`)" 
+      - "traefik.http.routers.jenkins-websecure.entrypoints=websecure"
+      - "traefik.http.routers.jenkins-websecure.tls=true"
+      - "traefik.http.routers.jenkins-websecure.tls.certresolver=acmestg"
+      - "traefik.http.routers.jenkins-web.middlewares=https-redirect"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
 
 networks:
   jenkins_dind:
