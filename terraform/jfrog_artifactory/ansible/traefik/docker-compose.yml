@@ -7,17 +7,16 @@ services:
     labels:
      - "traefik.enable=true"
      - "traefik.docker.network=traefik_backend"
-     - "traefik.http.routers.traefik-web=true"
-     - "traefik.http.routers.traefik-web.rule=Host(`traefik.mjs.dops.stairways.ai`)"
-     - "traefik.http.routers.traefik-web.entrypoints=web"
-     - "traefik.http.routers.traefik-web.service=api@internal"
-     - "traefik.http.routers.traefik-websecure=true"
-     - "traefik.http.routers.traefik-websecure.rule=Host(`traefik.mjs.dops.stairways.ai`)"
-     - "traefik.http.routers.traefik-websecure.entrypoints=websecure"
-     - "traefik.http.routers.traefik-websecure.service=api@internal"
-     - "traefik.http.routers.traefik-websecure.tls.certresolver=acmestg"
-     - "traefik.http.routers.traefik-websecure.tls=true"
-
+     - "traefik.http.routers.art-traefik-web=true"
+     - "traefik.http.routers.art-traefik-web.rule=Host(`art-traefik.mjs.dops.stairways.ai`)"
+     - "traefik.http.routers.art-traefik-web.entrypoints=web"
+     - "traefik.http.routers.art-traefik-web.service=api@internal"
+     - "traefik.http.routers.art-traefik-websecure=true"
+     - "traefik.http.routers.art-traefik-websecure.rule=Host(`art-traefik.mjs.dops.stairways.ai`)"
+     - "traefik.http.routers.art-traefik-websecure.entrypoints=websecure"
+     - "traefik.http.routers.art-traefik-websecure.service=api@internal"
+     - "traefik.http.routers.art-traefik-websecure.tls.certresolver=acmestg"
+     - "traefik.http.routers.art-traefik-websecure.tls=true"
     networks:
       - traefik
     ports:

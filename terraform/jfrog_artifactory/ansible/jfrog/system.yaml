@@ -1,0 +1,14 @@
+shared:
+    node:
+        ip: 127.0.1.1
+        id: temp-artifactory
+        name: temp-artifactory
+    database:
+        type: postgresql
+        driver: org.postgresql.Driver
+        url: jdbc:postgresql://postgres:5432/artifactory
+        username: postgres
+        password: c4erlaZIl0kXUYD7rA7jU7YRyesgcm256.MsSAdfhbaHBSJDV.a_dOSZHVuYBzAyTxGbt2aU6U
+router:
+    entrypoints:
+        externalPort: 8082

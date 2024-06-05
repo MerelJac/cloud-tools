@@ -19,19 +19,31 @@
       ansible.builtin.shell: chown -R 999:999 ./artifactory/var/data/postgres
       args:
         chdir: /usr/docker/jfrog
-    - name: Copy file with owner and permissions
+    - name: Copy traefik files
       ansible.builtin.copy:
         src: traefik/
         dest: /usr/docker/traefik/
-    - name: Copy file with owner and permissions
+    - name: Copy jfrog compose files
       ansible.builtin.copy:
-        src: jfrog/
+        src: jfrog/docker-compose*
         dest: /usr/docker/jfrog/
+    - name: Copy jfrog env file
+      ansible.builtin.copy:
+        src: jfrog/art.env
+        dest: /usr/docker/jfrog/.env
+    - name: Copy jfrog config file
+      ansible.builtin.copy:
+        src: jfrog/system.yaml
+        dest: /usr/docker/jfrog/artifactory/var/etc/system.yaml
     - name: Start traefik container
       ansible.builtin.shell: docker compose up -d
       args:
         chdir: /usr/docker/traefik
+    - name: Start jfrog postgres container
+      ansible.builtin.shell: docker compose -f ./docker-compose-postgres.yaml up -d
+      args:
+        chdir: /usr/docker/jfrog
     - name: Start jfrog project
-      ansible.builtin.shell: docker compose up -d
+      ansible.builtin.shell: docker compose -f ./docker-compose-jfrog.yaml up -d
       args:
         chdir: /usr/docker/jfrog
