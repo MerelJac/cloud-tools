@@ -25,8 +25,9 @@
         dest: /usr/docker/traefik/
     - name: Copy jfrog compose files
       ansible.builtin.copy:
-        src: jfrog/docker-compose*
+        src: "{{ item }}"
         dest: /usr/docker/jfrog/
+      with_fileglob: jfrog/docker-compose*
     - name: Copy jfrog env file
       ansible.builtin.copy:
         src: jfrog/art.env
