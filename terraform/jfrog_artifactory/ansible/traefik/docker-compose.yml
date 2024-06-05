@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  traefik:
+    image: "traefik:v2.4"
+    container_name: "traefik-router"
+    labels:
+     - "traefik.enable=true"
+     - "traefik.docker.network=traefik_backend"
+     - "traefik.http.routers.traefik-web=true"
+     - "traefik.http.routers.traefik-web.rule=Host(`traefik.mjs.dops.stairways.ai`)"
+     - "traefik.http.routers.traefik-web.entrypoints=web"
+     - "traefik.http.routers.traefik-web.service=api@internal"
+     - "traefik.http.routers.traefik-websecure=true"
+     - "traefik.http.routers.traefik-websecure.rule=Host(`traefik.mjs.dops.stairways.ai`)"
+     - "traefik.http.routers.traefik-websecure.entrypoints=websecure"
+     - "traefik.http.routers.traefik-websecure.service=api@internal"
+     - "traefik.http.routers.traefik-websecure.tls.certresolver=acmestg"
+     - "traefik.http.routers.traefik-websecure.tls=true"
+
+    networks:
+      - traefik
+    ports:
+      # HTTPS / SSL port
+      - "80:80"
+      - "443:443"
+    expose:
+      - "8080:8080"
+    volumes:
+     - ./traefik-config.yml:/etc/traefik/traefik.yml:ro
+     - ./http-config.yml:/etc/traefik/config.yml:ro
+     - ./letsencrypt:/letsencrypt
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+networks:
+  traefik:
+    name: traefik_backend

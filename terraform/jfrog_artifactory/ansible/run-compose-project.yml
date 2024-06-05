@@ -1,0 +1,37 @@
+---
+- name: Install Compose Projects on Server
+  hosts: all
+  remote_user: root 
+  become: true
+
+  tasks:
+    - name: Make a working directory for traefik
+      ansible.builtin.shell: mkdir -p /usr/docker/traefik
+    - name: Make a working directory for jfrog
+      ansible.builtin.shell: mkdir -p /usr/docker/jfrog/artifactory/var/data/postgres
+    - name: Finish creating directory for jfrog
+      ansible.builtin.shell: mkdir -p /usr/docker/jfrog/artifactory/var/etc
+    - name: Change jfrog data permissions
+      ansible.builtin.shell: chown -R 1030:1030 ./artifactory
+      args:
+        chdir: /usr/docker/jfrog
+    - name: Change jfrog db data permissions
+      ansible.builtin.shell: chown -R 999:999 ./artifactory/var/data/postgres
+      args:
+        chdir: /usr/docker/jfrog
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: traefik/
+        dest: /usr/docker/traefik/
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: jfrog/
+        dest: /usr/docker/jfrog/
+    - name: Start traefik container
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: /usr/docker/traefik
+    - name: Start jfrog project
+      ansible.builtin.shell: docker compose up -d
+      args:
+        chdir: /usr/docker/jfrog
