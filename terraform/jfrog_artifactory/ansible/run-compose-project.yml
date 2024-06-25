@@ -47,11 +47,11 @@
       ansible.builtin.shell: mkdir -p ./artifactory/var/data/postgres
       args:
         chdir: /usr/docker/jfrog
-    - name: Change jfrog data permissions
+    - name: Change jfrog working directory permissions
       ansible.builtin.shell: chown -R 1030:1030 ./artifactory
       args:
         chdir: /usr/docker/jfrog
-    - name: Change jfrog db data permissions
+    - name: Change jfrog data directory permissions
       ansible.builtin.shell: chown -R 999:999 ./artifactory/var/data/postgres
       args:
         chdir: /usr/docker/jfrog
