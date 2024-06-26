@@ -1,4 +1,12 @@
+
+  ##########
+  # DOCS
+  #####
+  # traefik: https://doc.traefik.io/traefik/user-guides/docker-compose/basic-example/
+  # JFrog: https://jfrog.com/help/r/jfrog-installation-setup-documentation/install-artifactory-single-node-with-docker-compose
+
 ---
+
 - name: Install Compose Projects on Server
   hosts: all
   remote_user: root 
@@ -8,26 +16,25 @@
     - name: Make a working directory for traefik
       ansible.builtin.shell: mkdir -p /usr/docker/traefik
     - name: Make a working directory for jfrog
-      ansible.builtin.shell: mkdir -p /usr/docker/jfrog/artifactory/var/data/postgres
-    - name: Finish creating directory for jfrog
-      ansible.builtin.shell: mkdir -p /usr/docker/jfrog/artifactory/var/etc
-    - name: Change jfrog data permissions
-      ansible.builtin.shell: chown -R 1030:1030 ./artifactory
-      args:
-        chdir: /usr/docker/jfrog
-    - name: Change jfrog db data permissions
-      ansible.builtin.shell: chown -R 999:999 ./artifactory/var/data/postgres
+      ansible.builtin.shell: mkdir -p /usr/docker/jfrog
+    - name: Load jfrog oss project tarball
+      ansible.builtin.shell: |
+        JFROG_VERSON="7.84.15"
+        JFROG_FILE="jfrog-artifactory-oss-${JFROG_VERSON}-linux.tar.gz"
+        wget -O artifactory.tar.gz https://releases.jfrog.io/artifactory/bintray-artifactory/org/artifactory/oss/jfrog-artifactory-oss/${JFROG_VERSON}/${JFROG_FILE}
+        tar -xvf ./artifactory.tar.gz
+        mv ./artifactory-oss-${JFROG_VERSON} ./artifactory
+        rm ./artifactory.tar.gz
       args:
         chdir: /usr/docker/jfrog
     - name: Copy traefik files
       ansible.builtin.copy:
         src: traefik/
         dest: /usr/docker/traefik/
-    - name: Copy jfrog compose files
+    - name: Copy jfrog compose file
       ansible.builtin.copy:
-        src: "{{ item }}"
+        src: jfrog/docker-compose.yml
         dest: /usr/docker/jfrog/
-      with_fileglob: jfrog/docker-compose*
     - name: Copy jfrog env file
       ansible.builtin.copy:
         src: jfrog/art.env
@@ -36,15 +43,31 @@
       ansible.builtin.copy:
         src: jfrog/system.yaml
         dest: /usr/docker/jfrog/artifactory/var/etc/system.yaml
+    - name: Make a data directory for jfrog
+      ansible.builtin.shell: mkdir -p ./artifactory/var/data/postgres
+      args:
+        chdir: /usr/docker/jfrog
+    - name: Change jfrog working directory permissions
+      ansible.builtin.shell: chown -R 1030:1030 ./artifactory
+      args:
+        chdir: /usr/docker/jfrog
+    - name: Change jfrog data directory permissions
+      ansible.builtin.shell: chown -R 999:999 ./artifactory/var/data/postgres
+      args:
+        chdir: /usr/docker/jfrog
     - name: Start traefik container
       ansible.builtin.shell: docker compose up -d
       args:
         chdir: /usr/docker/traefik
-    - name: Start jfrog postgres container
-      ansible.builtin.shell: docker compose -f ./docker-compose-postgres.yaml up -d
-      args:
-        chdir: /usr/docker/jfrog
     - name: Start jfrog project
-      ansible.builtin.shell: docker compose -f ./docker-compose-jfrog.yaml up -d
+      ansible.builtin.shell: docker compose up -d
       args:
         chdir: /usr/docker/jfrog
+
+    # - name: Restart jfrog (performance issues)
+    #   ansible.builtin.shell: |
+    #     docker compose down
+    #     sleep 120
+    #     docker compose up -d
+    #   args:
+    #     chdir: /usr/docker/jfrog

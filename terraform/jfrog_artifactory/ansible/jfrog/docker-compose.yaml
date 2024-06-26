@@ -1,13 +1,38 @@
 version: '3'
 services:
+  postgres:
+    image: ${DOCKER_REGISTRY}/postgres:15.2-alpine
+    container_name: postgresql
+    environment:
+      - POSTGRES_DB=artifactory
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=c4erlaZIl0kXUYD7rA7jU7YRyesgcm256.MsSAdfhbaHBSJDV.a_dOSZHVuYBzAyTxGbt2aU6U
+    expose:
+      - 5432:5432
+    networks:
+      - jfrog
+    volumes:
+      - ${ROOT_DATA_DIR}/var/data/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
   artifactory:
     image: ${DOCKER_REGISTRY}/jfrog/artifactory-jcr:${ARTIFACTORY_VERSION}
     container_name: artifactory
     environment:
       - JF_ROUTER_ENTRYPOINTS_EXTERNALPORT=${JF_ROUTER_ENTRYPOINTS_EXTERNALPORT}
-    ports:
-      - ${JF_ROUTER_ENTRYPOINTS_EXTERNALPORT}:${JF_ROUTER_ENTRYPOINTS_EXTERNALPORT} # for router communication
-      - 8081:8081 # for artifactory communication
+    expose:
+      - ${JF_ROUTER_ENTRYPOINTS_EXTERNALPORT} # for router communication
+      - 8081 # for artifactory communication
     networks:
       - jfrog
       - traefik
@@ -31,14 +56,16 @@ services:
       - "traefik.http.routers.jfrog.rule=Host(`jfrog.mjs.dops.stairways.ai`)"
       - "traefik.http.routers.jfrog.entrypoints=web"
       - "traefik.http.services.jfrog-unsecured.loadbalancer.server.port=8082"
-      - "traefik.http.routers.jfrog-websecure.rule=Host(`jfrog.mjs.dops.stairways.ai`)" 
+      - "traefik.http.routers.jfrog-websecure.rule=Host(`jfrog.mjs.dops.stairways.ai`)"
+      - "traefik.http.routers.jfrog-websecure.service=jfrog-unsecured"
       - "traefik.http.routers.jfrog-websecure.entrypoints=websecure"
       - "traefik.http.routers.jfrog-websecure.tls=true"
       - "traefik.http.routers.jfrog-websecure.tls.certresolver=acmestg"
       - "traefik.http.routers.art.rule=Host(`artifactory.mjs.dops.stairways.ai`)"
       - "traefik.http.routers.art.entrypoints=web"
       - "traefik.http.services.art-unsecured.loadbalancer.server.port=8081"
-      - "traefik.http.routers.art-websecure.rule=Host(`artifactory.mjs.dops.stairways.ai`)" 
+      - "traefik.http.routers.art-websecure.rule=Host(`artifactory.mjs.dops.stairways.ai`)"
+      - "traefik.http.routers.art-websecure.service=art-unsecured"
       - "traefik.http.routers.art-websecure.entrypoints=websecure"
       - "traefik.http.routers.art-websecure.tls=true"
       - "traefik.http.routers.art-websecure.tls.certresolver=acmestg"
